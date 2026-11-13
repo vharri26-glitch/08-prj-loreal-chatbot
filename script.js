@@ -39,9 +39,18 @@ const messages = [
   { role: "system", content: systemPrompt }
 ];
 
+// Helper function to add a message to the chat window
+function addMessage(text, role) {
+  const msgDiv = document.createElement("div");
+  msgDiv.className = `msg ${role}`;
+  msgDiv.textContent = text;
+  chatWindow.appendChild(msgDiv);
+  // Auto-scroll to the latest message
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
 // Starting message
-chatWindow.textContent =
-  "👋 Welcome! I'm your L'Oréal Beauty Assistant. Ask me about products, ingredients, or your beauty routine!";
+addMessage("👋 Welcome! I'm your L'Oréal Beauty Assistant. Ask me about products, ingredients, or your beauty routine!", "ai");
 
 // Handle chat submission
 chatForm.addEventListener("submit", async (e) => {
@@ -56,8 +65,8 @@ chatForm.addEventListener("submit", async (e) => {
     content: question
   });
 
-  // Display the latest question
-  chatWindow.textContent = `You: ${question}\n\nThinking...`;
+  // Display the user's message
+  addMessage(question, "user");
 
   userInput.value = "";
 
@@ -86,16 +95,14 @@ chatForm.addEventListener("submit", async (e) => {
       content: answer
     });
 
-    // Display the conversation
-    chatWindow.textContent =
-      `You: ${question}\n\nL'Oréal Assistant: ${answer}`;
+    // Display the AI's response
+    addMessage(answer, "ai");
 
   } catch (error) {
     // Remove the unanswered question from history
     messages.pop();
 
-    chatWindow.textContent =
-      `Sorry, something went wrong: ${error.message}`;
+    addMessage(`Sorry, something went wrong: ${error.message}`, "ai");
 
     console.error("Chatbot error:", error);
   }
