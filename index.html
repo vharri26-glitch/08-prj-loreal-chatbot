@@ -1,64 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat Assistant</title>
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="A personal L'Oréal beauty advisor for skincare, makeup, haircare, and beauty routines."
+  >
+  <title>L'Oréal Beauty Advisor</title>
 
-  <body>
-    <div class="page-wrapper">
-      <!------- Header / Branding ------->
-      <header class="site-header">
-        <h1 class="site-title">Smart Product Advisor</h1>
-      </header>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital@0;1&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+</head>
 
-      <!------- Chat Area ------->
-      <main>
-        <section class="chatbox">
-          <div id="chatWindow" class="chat-window">
-            <!-- messages will be appended here via JS -->
-          </div>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#vanityScene" aria-label="L'Oréal Paris Beauty Advisor home">
+      <img
+        src="img/L’Oréal Paris Watercolor Floral Emblem.png"
+        alt="L'Oréal Paris"
+      >
+    </a>
 
-          <form id="chatForm" class="chat-form">
-            <label for="userInput" class="visually-hidden">Message</label>
-            <input
-              id="userInput"
-              name="userInput"
-              type="text"
-              placeholder="Ask me about products or routines…"
-              autocomplete="off"
-              required
-            />
-            <button type="submit" id="sendBtn">
-              <span class="material-icons">send</span>
-              <span class="visually-hidden">Send</span>
-            </button>
-          </form>
-        </section>
-      </main>
+    <nav class="main-menu" aria-label="Main navigation">
+      <button type="button" data-topic="Beauty chatbot">Beauty chatbot</button>
+      <button type="button" data-topic="Skincare">Skincare</button>
+      <button type="button" data-topic="Makeup">Makeup</button>
+      <button type="button" data-topic="Haircare">Haircare</button>
+      <button type="button" data-topic="Discover">Discover</button>
+    </nav>
 
-      <!------- Footer Links ------->
-      <footer class="site-footer">
-        <p>&copy; 2025 Company Name. All rights reserved.</p>
-        <nav>
-          <!-- These URLs are placeholders -->
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Contact</a>
-        </nav>
-      </footer>
+    <div class="header-actions" aria-label="Shopping and account">
+      <button id="searchButton" type="button" aria-label="Search">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5"></circle>
+          <path d="m15.5 15.5 5 5"></path>
+        </svg>
+      </button>
+      <button type="button" aria-label="Account">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="3.5"></circle>
+          <path d="M4.5 21c.7-5 3.3-7.5 7.5-7.5s6.8 2.5 7.5 7.5"></path>
+        </svg>
+      </button>
+      <button type="button" aria-label="Shopping bag">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 8h14l-1 13H6L5 8Z"></path>
+          <path d="M9 9V6a3 3 0 0 1 6 0v3"></path>
+        </svg>
+      </button>
     </div>
+  </header>
 
-    <script src="script.js"></script>
-  </body>
+  <main class="page">
+    <h1 class="visually-hidden">L'Oréal Beauty Advisor</h1>
+
+    <!-- The uploaded illustration supplies all of the vanity artwork. -->
+    <section
+      id="vanityScene"
+      class="vanity-scene"
+      aria-label="L'Oréal Paris personal beauty advisor"
+    >
+      <img
+        class="reference-art"
+        src="img/loreal-vanity-clean.png"
+        alt=""
+        aria-hidden="true"
+      >
+
+      <img
+        class="table-accessories"
+        src="img/watercolor-pearls-earrings.png"
+        alt=""
+        aria-hidden="true"
+      >
+
+      <!-- The cleaned artwork leaves this line directly on the mirror. -->
+      <div class="opening-mask" aria-hidden="true">
+        <p class="opening-quote">Mirror, mirror on the wall...</p>
+      </div>
+
+      <!-- Messages are aligned inside the illustrated mirror. -->
+      <section class="mirror-conversation" aria-label="Beauty advisor conversation">
+        <div
+          id="chatWindow"
+          class="chat-window"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions"
+          aria-label="Conversation"
+        ></div>
+      </section>
+
+      <!-- These transparent controls sit over the illustrated vanity input bar. -->
+      <div class="input-dock">
+        <div id="uploadPreview" class="upload-preview" aria-live="polite">
+          <img id="previewImage" alt="Selected photo">
+          <span id="previewName"></span>
+          <button
+            id="removePhoto"
+            class="remove-photo"
+            type="button"
+            aria-label="Remove selected photo"
+          >×</button>
+        </div>
+
+        <form id="chatForm" class="chat-form">
+          <button
+            type="button"
+            id="uploadButton"
+            class="upload-button"
+            aria-label="Upload a product or skin photo"
+            title="Upload a product or skin photo"
+          >
+            <span class="visually-hidden">Upload photo</span>
+          </button>
+
+          <input
+            type="file"
+            id="photoInput"
+            accept="image/jpeg,image/png,image/webp"
+            class="visually-hidden"
+            aria-label="Choose a photo"
+          >
+
+          <label class="visually-hidden" for="userInput">
+            Your beauty question
+          </label>
+          <textarea
+            id="userInput"
+            rows="1"
+            placeholder="Ask me anything about your beauty routine..."
+            aria-label="Your beauty question"
+          ></textarea>
+
+          <button
+            type="submit"
+            id="sendBtn"
+            class="send-button"
+            aria-label="Send message"
+            title="Send message"
+          >
+            <span class="visually-hidden">Send</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <p class="page-note">
+      Independent educational L'Oréal-inspired project.
+    </p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
 </html>
