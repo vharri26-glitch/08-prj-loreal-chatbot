@@ -17,8 +17,6 @@ const previewImage = document.getElementById("previewImage");
 const previewName = document.getElementById("previewName");
 const removePhoto = document.getElementById("removePhoto");
 const vanityScene = document.getElementById("vanityScene");
-const searchButton = document.getElementById("searchButton");
-const menuButtons = document.querySelectorAll("[data-topic]");
 
 let selectedPhoto = null;
 let previewUrl = null;
@@ -129,29 +127,6 @@ function addMessage(role, text, imageUrl = null) {
 // Open the photo picker
 uploadButton.addEventListener("click", () => {
   if (!isSending) photoInput.click();
-});
-
-// Menu choices give beginners a useful starting point for the conversation.
-menuButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const topic = button.dataset.topic;
-
-    if (topic === "Beauty chatbot") {
-      userInput.value = "Help me find the right beauty advice for me.";
-    } else if (topic === "Discover") {
-      userInput.value = "What new beauty routine could I try?";
-    } else {
-      userInput.value = `Help me with my ${topic.toLowerCase()} routine.`;
-    }
-
-    userInput.focus();
-    vanityScene.scrollIntoView({ behavior: "smooth", block: "center" });
-  });
-});
-
-searchButton.addEventListener("click", () => {
-  userInput.focus();
-  vanityScene.scrollIntoView({ behavior: "smooth", block: "center" });
 });
 
 // Photo preview

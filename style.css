@@ -25,98 +25,9 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
-.site-header {
-  position: relative;
-  z-index: 20;
-  display: grid;
-  grid-template-columns: minmax(190px, 1fr) auto minmax(150px, 1fr);
-  align-items: center;
-  min-height: 92px;
-  padding: 10px clamp(18px, 3.5vw, 56px);
-  border-bottom: 1px solid rgba(142, 108, 67, 0.25);
-  background: rgba(255, 253, 249, 0.97);
-}
-
-.brand {
-  justify-self: start;
-  display: block;
-  width: clamp(170px, 20vw, 285px);
-}
-
-.brand img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.main-menu {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(18px, 2.4vw, 40px);
-}
-
-.main-menu button,
-.header-actions button {
-  padding: 7px 0;
-  border: 0;
-  color: #29231f;
-  background: transparent;
-  cursor: pointer;
-}
-
-.main-menu button {
-  position: relative;
-  font-size: clamp(11px, 0.85vw, 14px);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.main-menu button::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background: #a77b47;
-  transform: scaleX(0);
-  transition: transform 0.2s ease;
-}
-
-.main-menu button:hover::after,
-.main-menu button:focus-visible::after {
-  transform: scaleX(1);
-}
-
-.header-actions {
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: clamp(13px, 1.5vw, 24px);
-}
-
-.header-actions button {
-  display: grid;
-  width: 28px;
-  height: 34px;
-  place-items: center;
-}
-
-.header-actions svg {
-  width: 22px;
-  height: 22px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.45;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
 /* The complete artwork keeps its natural 3:2 shape at every screen size. */
 .page {
-  min-height: calc(100svh - 92px);
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -172,18 +83,6 @@ button {
 .opening-quote {
   font: italic 400 clamp(11px, 2.75vw, 40px) / 1.2 "Playfair Display", Georgia, serif;
   transition: opacity 0.75s ease, transform 0.75s ease;
-}
-
-.table-accessories {
-  position: absolute;
-  z-index: 1;
-  top: 71.5%;
-  left: 30%;
-  width: 40%;
-  height: 10.5%;
-  object-fit: contain;
-  pointer-events: none;
-  filter: drop-shadow(0 2px 2px rgba(69, 48, 29, 0.12));
 }
 
 /* Chat bubbles stay transparent until a user submits a message. */
@@ -413,52 +312,9 @@ button {
 
 /* Small screens keep the artwork proportional and make controls easy to tap. */
 @media (max-width: 600px) {
-  .site-header {
-    grid-template-columns: 1fr auto;
-    min-height: 116px;
-    padding: 8px 14px 9px;
-  }
-
-  .brand {
-    width: 158px;
-  }
-
-  .main-menu {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    width: calc(100vw - 20px);
-    justify-content: flex-start;
-    gap: 21px;
-    padding: 5px 2px 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .main-menu::-webkit-scrollbar {
-    display: none;
-  }
-
-  .main-menu button {
-    flex: 0 0 auto;
-    font-size: 10px;
-  }
-
-  .header-actions {
-    gap: 10px;
-  }
-
-  .header-actions button {
-    width: 24px;
-  }
-
-  .header-actions svg {
-    width: 19px;
-    height: 19px;
-  }
-
   .page {
     justify-content: flex-start;
-    min-height: calc(100svh - 116px);
+    min-height: 100svh;
   }
 
   .vanity-scene {
