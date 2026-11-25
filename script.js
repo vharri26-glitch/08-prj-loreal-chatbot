@@ -1,9 +1,7 @@
-
 // L'Oréal Beauty Advisor
 // Frontend chat and image upload
 
-const workerUrl =
-  "https://loreal-beauty-assistant.vharri26.workers.dev/";
+const workerUrl = "https://loreal-beauty-assistant.vharri26.workers.dev/";
 
 const chatForm = document.getElementById("chatForm");
 const userInput = document.getElementById("userInput");
@@ -106,8 +104,7 @@ let history = [];
 function addMessage(role, text, imageUrl = null) {
   const bubble = document.createElement("div");
 
-  bubble.className =
-    role === "user" ? "msg user" : "msg ai";
+  bubble.className = role === "user" ? "msg user" : "msg ai";
 
   bubble.textContent = text;
 
@@ -134,11 +131,7 @@ photoInput.addEventListener("change", () => {
   const file = photoInput.files[0];
   if (!file) return;
 
-  const allowedTypes = [
-    "image/jpeg",
-    "image/png",
-    "image/webp"
-  ];
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 
   if (!allowedTypes.includes(file.type)) {
     alert("Please select a JPG, PNG, or WebP image.");
@@ -189,7 +182,7 @@ function prepareImage(file) {
         const maxDimension = 1400;
         const scale = Math.min(
           1,
-          maxDimension / Math.max(image.width, image.height)
+          maxDimension / Math.max(image.width, image.height),
         );
 
         const canvas = document.createElement("canvas");
@@ -205,9 +198,7 @@ function prepareImage(file) {
         // White background for transparent images
         context.fillStyle = "#ffffff";
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(
-          image, 0, 0, canvas.width, canvas.height
-        );
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
         resolve(canvas.toDataURL("image/jpeg", 0.78));
       } catch (error) {
@@ -228,11 +219,7 @@ function prepareImage(file) {
 
 // Enter sends; Shift+Enter creates a new line
 userInput.addEventListener("keydown", (event) => {
-  if (
-    event.key === "Enter" &&
-    !event.shiftKey &&
-    !event.isComposing
-  ) {
+  if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
     event.preventDefault();
     chatForm.requestSubmit();
   }
@@ -260,8 +247,8 @@ chatForm.addEventListener("submit", async (event) => {
 
   try {
     let userContent;
-    const messageText = question ||
-      "Please look at this photo and help me understand it.";
+    const messageText =
+      question || "Please look at this photo and help me understand it.";
 
     if (file) {
       const imageData = await prepareImage(file);
@@ -271,15 +258,15 @@ chatForm.addEventListener("submit", async (event) => {
       userContent = [
         {
           type: "text",
-          text: messageText
+          text: messageText,
         },
         {
           type: "image_url",
           image_url: {
             url: imageData,
-            detail: "auto"
-          }
-        }
+            detail: "auto",
+          },
+        },
       ];
     } else {
       userContent = messageText;
@@ -287,39 +274,34 @@ chatForm.addEventListener("submit", async (event) => {
 
     addMessage("user", messageText, displayPhotoUrl);
 
-    const thinking = addMessage(
-      "assistant",
-      "Let me take a look..."
-    );
+    const thinking = addMessage("assistant", "Let me take a look...");
     thinking.classList.add("status");
 
     const userMessage = {
       role: "user",
-      content: userContent
+      content: userContent,
     };
 
     // Include recent exchanges for context
     const messages = [
       { role: "system", content: systemPrompt },
       ...history.slice(-12),
-      userMessage
+      userMessage,
     ];
 
     try {
       const response = await fetch(workerUrl, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages })
+        body: JSON.stringify({ messages }),
       });
 
       const data = await response.json();
 
       if (!response.ok || data.error) {
-        throw new Error(
-          data.error?.message || "The service is unavailable."
-        );
+        throw new Error(data.error?.message || "The service is unavailable.");
       }
 
       const answer = data.choices?.[0]?.message?.content;
@@ -334,7 +316,7 @@ chatForm.addEventListener("submit", async (event) => {
       history.push(userMessage);
       history.push({
         role: "assistant",
-        content: answer
+        content: answer,
       });
 
       // Keep session history at a manageable size
@@ -344,23 +326,18 @@ chatForm.addEventListener("submit", async (event) => {
       clearPhoto();
 
       chatWindow.scrollTop = chatWindow.scrollHeight;
-
     } catch (error) {
       thinking.classList.remove("status");
       thinking.textContent =
         "I couldn't complete that request. " +
-        "Please try again. " + error.message;
+        "Please try again. " +
+        error.message;
 
       console.error("Chat request failed:", error);
     }
-
   } catch (error) {
-    addMessage(
-      "assistant",
-      "I couldn't process that photo. " + error.message
-    );
+    addMessage("assistant", "I couldn't process that photo. " + error.message);
     console.error("Image processing failed:", error);
-
   } finally {
     isSending = false;
     sendBtn.disabled = false;
@@ -381,65 +358,72 @@ chatForm.addEventListener("submit", async (event) => {
       id: "ha-serum",
       name: "RevitaLift 1.5% Pure Hyaluronic Acid Serum",
       category: "Skincare",
-      description: "A hydrating facial serum. Apply after cleansing and before moisturizer.",
-      url: "https://www.lorealparisusa.com/skin-care/face-serums/revitalift-derm-intensives-pure-hyaluronic-acid-serum"
+      description:
+        "A hydrating facial serum. Apply after cleansing and before moisturizer.",
+      url: "https://www.lorealparisusa.com/skin-care/face-serums/revitalift-derm-intensives-pure-hyaluronic-acid-serum",
     },
     {
       id: "triple-moisturizer",
       name: "RevitaLift Triple Power Moisturizer",
       category: "Skincare",
-      description: "A facial moisturizer designed to hydrate and address visible signs of aging.",
-      url: "https://www.lorealparisusa.com/skin-care/facial-moisturizers/revitalift-triple-power-anti-aging-moisturizer"
+      description:
+        "A facial moisturizer designed to hydrate and address visible signs of aging.",
+      url: "https://www.lorealparisusa.com/skin-care/facial-moisturizers/revitalift-triple-power-anti-aging-moisturizer",
     },
     {
       id: "spf-moisturizer",
       name: "RevitaLift Triple Power SPF 30 Moisturizer",
       category: "Skincare",
-      description: "A daytime moisturizer with broad-spectrum SPF 30 sunscreen.",
-      url: "https://www.lorealparisusa.com/skin-care/facial-moisturizers/revitalift-triple-power-moisturizer-spf-30"
+      description:
+        "A daytime moisturizer with broad-spectrum SPF 30 sunscreen.",
+      url: "https://www.lorealparisusa.com/skin-care/facial-moisturizers/revitalift-triple-power-moisturizer-spf-30",
     },
     {
       id: "hyaluron-shampoo",
       name: "Elvive Hyaluron + Plump Shampoo",
       category: "Haircare",
       description: "A hydrating shampoo for dry or dehydrated hair.",
-      url: "https://www.lorealparisusa.com/hair-care-hair-style/shampoo/elvive-hyaluron-plump-hyaluro-shampoo-26-5oz"
+      url: "https://www.lorealparisusa.com/hair-care-hair-style/shampoo/elvive-hyaluron-plump-hyaluro-shampoo-26-5oz",
     },
     {
       id: "hyaluron-conditioner",
       name: "Elvive Hyaluron + Plump Conditioner",
       category: "Haircare",
-      description: "A hydrating conditioner intended to follow shampoo and help detangle dry hair.",
-      url: "https://www.lorealparisusa.com/hyaluron-hair-care"
+      description:
+        "A hydrating conditioner intended to follow shampoo and help detangle dry hair.",
+      url: "https://www.lorealparisusa.com/hyaluron-hair-care",
     },
     {
       id: "dream-lengths",
       name: "Elvive Dream Lengths No Haircut Cream",
       category: "Haircare",
-      description: "A leave-in conditioner for lengths and ends, especially hair prone to damage.",
-      url: "https://www.lorealparisusa.com/hair-care-hair-style/hair-treatments/elvive-dream-lengths-no-haircut-cream-leave-in-conditioner"
+      description:
+        "A leave-in conditioner for lengths and ends, especially hair prone to damage.",
+      url: "https://www.lorealparisusa.com/hair-care-hair-style/hair-treatments/elvive-dream-lengths-no-haircut-cream-leave-in-conditioner",
     },
     {
       id: "true-match",
       name: "True Match Super-Blendable Foundation",
       category: "Makeup",
-      description: "A blendable liquid foundation with buildable medium coverage. Shade selection matters.",
-      url: "https://www.lorealparisusa.com/makeup/face/foundation-makeup/true-match-super-blendable-makeup"
+      description:
+        "A blendable liquid foundation with buildable medium coverage. Shade selection matters.",
+      url: "https://www.lorealparisusa.com/makeup/face/foundation-makeup/true-match-super-blendable-makeup",
     },
     {
       id: "voluminous",
       name: "Voluminous Original Washable Mascara",
       category: "Makeup",
       description: "A mascara designed to build visible lash volume.",
-      url: "https://www.lorealparisusa.com/makeup/eye/mascara/voluminous-carbon-black-mascara"
+      url: "https://www.lorealparisusa.com/makeup/eye/mascara/voluminous-carbon-black-mascara",
     },
     {
       id: "colour-riche",
       name: "Colour Riche Satin Lipstick",
       category: "Makeup",
-      description: "A creamy, satin-finish lipstick available in different shades.",
-      url: "https://www.lorealparisusa.com/makeup/lip-color/lipstick/colour-riche-lipcolour"
-    }
+      description:
+        "A creamy, satin-finish lipstick available in different shades.",
+      url: "https://www.lorealparisusa.com/makeup/lip-color/lipstick/colour-riche-lipcolour",
+    },
   ];
 
   const STORAGE_KEY = "loreal-selected-products-v1";
@@ -855,15 +839,11 @@ chatForm.addEventListener("submit", async (event) => {
   let searchTerm = "";
 
   try {
-    const saved = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || "[]"
-    );
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
     if (Array.isArray(saved)) {
-      const validIds = PRODUCTS.map(p => p.id);
-      selected = new Set(
-        saved.filter(id => validIds.includes(id))
-      );
+      const validIds = PRODUCTS.map((p) => p.id);
+      selected = new Set(saved.filter((id) => validIds.includes(id)));
     }
   } catch (error) {
     console.warn("Could not load saved products:", error);
@@ -871,17 +851,14 @@ chatForm.addEventListener("submit", async (event) => {
 
   function saveSelections() {
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify([...selected])
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...selected]));
     } catch (error) {
       console.warn("Could not save products:", error);
     }
   }
 
   function getSelectedProducts() {
-    return PRODUCTS.filter(p => selected.has(p.id));
+    return PRODUCTS.filter((p) => selected.has(p.id));
   }
 
   // ------------------------------
@@ -905,21 +882,19 @@ chatForm.addEventListener("submit", async (event) => {
   function renderProducts() {
     grid.replaceChildren();
 
-    const matching = PRODUCTS.filter(product => {
+    const matching = PRODUCTS.filter((product) => {
       const matchesCategory =
-        category === "All" ||
-        product.category === category;
+        category === "All" || product.category === category;
 
       const searchable = (
-        product.name + " " +
-        product.category + " " +
+        product.name +
+        " " +
+        product.category +
+        " " +
         product.description
       ).toLowerCase();
 
-      return (
-        matchesCategory &&
-        searchable.includes(searchTerm)
-      );
+      return matchesCategory && searchable.includes(searchTerm);
     });
 
     if (matching.length === 0) {
@@ -930,20 +905,22 @@ chatForm.addEventListener("submit", async (event) => {
       return;
     }
 
-    matching.forEach(product => {
+    matching.forEach((product) => {
       const isSelected = selected.has(product.id);
 
       const card = document.createElement("article");
-      card.className =
-        "bs-card" + (isSelected ? " is-selected" : "");
+      card.className = "bs-card" + (isSelected ? " is-selected" : "");
 
       const icon = document.createElement("div");
       icon.className = "bs-icon";
       icon.setAttribute("aria-hidden", "true");
 
       icon.textContent =
-        product.category === "Skincare" ? "S" :
-        product.category === "Makeup" ? "M" : "H";
+        product.category === "Skincare"
+          ? "S"
+          : product.category === "Makeup"
+            ? "M"
+            : "H";
 
       const cat = document.createElement("p");
       cat.className = "bs-category";
@@ -971,26 +948,19 @@ chatForm.addEventListener("submit", async (event) => {
       const selectButton = document.createElement("button");
       selectButton.type = "button";
       selectButton.className = "bs-pick";
-      selectButton.setAttribute(
-        "aria-pressed",
-        String(isSelected)
-      );
+      selectButton.setAttribute("aria-pressed", String(isSelected));
       selectButton.setAttribute(
         "aria-label",
-        (isSelected ? "Remove " : "Select ") + product.name
+        (isSelected ? "Remove " : "Select ") + product.name,
       );
 
-      selectButton.textContent = isSelected
-        ? "✓ Selected"
-        : "+ Add to shelf";
+      selectButton.textContent = isSelected ? "✓ Selected" : "+ Add to shelf";
 
       selectButton.addEventListener("click", () => {
         toggleProduct(product.id);
       });
 
-      card.append(
-        icon, cat, name, details, selectButton
-      );
+      card.append(icon, cat, name, details, selectButton);
 
       grid.appendChild(card);
     });
@@ -1004,8 +974,7 @@ chatForm.addEventListener("submit", async (event) => {
 
     const current = getSelectedProducts();
 
-    countLabel.textContent =
-      `Selected products (${current.length})`;
+    countLabel.textContent = `Selected products (${current.length})`;
 
     generateButton.disabled = current.length === 0;
     clearButton.disabled = current.length === 0;
@@ -1018,16 +987,13 @@ chatForm.addEventListener("submit", async (event) => {
       return;
     }
 
-    current.forEach(product => {
+    current.forEach((product) => {
       const chip = document.createElement("button");
       chip.type = "button";
       chip.className = "bs-chip";
       chip.textContent = product.name + "  ×";
 
-      chip.setAttribute(
-        "aria-label",
-        "Remove " + product.name
-      );
+      chip.setAttribute("aria-label", "Remove " + product.name);
 
       chip.addEventListener("click", () => {
         toggleProduct(product.id);
@@ -1045,17 +1011,13 @@ chatForm.addEventListener("submit", async (event) => {
     renderProducts();
   });
 
-  shelf.querySelectorAll(".bs-filter").forEach(button => {
+  shelf.querySelectorAll(".bs-filter").forEach((button) => {
     button.addEventListener("click", () => {
       category = button.dataset.category;
 
-      shelf.querySelectorAll(".bs-filter")
-        .forEach(other => {
-          other.setAttribute(
-            "aria-pressed",
-            String(other === button)
-          );
-        });
+      shelf.querySelectorAll(".bs-filter").forEach((other) => {
+        other.setAttribute("aria-pressed", String(other === button));
+      });
 
       renderProducts();
     });
@@ -1076,10 +1038,12 @@ chatForm.addEventListener("submit", async (event) => {
 
     if (current.length === 0 || isSending) return;
 
-    const productDetails = current.map(product =>
-      `- ${product.name} (${product.category}): ` +
-      product.description
-    ).join("\n");
+    const productDetails = current
+      .map(
+        (product) =>
+          `- ${product.name} (${product.category}): ` + product.description,
+      )
+      .join("\n");
 
     const routineRequest =
       "Please create a personalized beauty routine " +
@@ -1101,12 +1065,806 @@ chatForm.addEventListener("submit", async (event) => {
     // Bring the user back to the conversation.
     chatWindow.scrollIntoView({
       behavior: "smooth",
-      block: "center"
+      block: "center",
     });
   });
 
   // Initial display
   renderProducts();
   renderSelected();
+})();
 
+/* ============================================
+   L'ORÉAL TOP NAVIGATION + ROUTINE PANEL
+   Paste at the BOTTOM of script.js,
+   after the Beauty Shelf code.
+   ============================================ */
+
+(() => {
+  const shelf = document.getElementById("beautyShelf");
+
+  if (!shelf) {
+    console.error("Beauty Shelf not found. Add the Part 2 code first.");
+    return;
+  }
+
+  // SVG icons — no extra library needed.
+  const icons = {
+    search: `<svg viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.7"
+      stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">
+      <circle cx="11" cy="11" r="7"/>
+      <path d="m20 20-4-4"/>
+    </svg>`,
+
+    account: `<svg viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.7"
+      stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4.5 21c0-4.2 3.2-7 7.5-7s7.5 2.8 7.5 7"/>
+    </svg>`,
+
+    bag: `<svg viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.7"
+      stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">
+      <path d="M4 8h16l-1.3 13H5.3L4 8Z"/>
+      <path d="M9 9V6a3 3 0 0 1 6 0v3"/>
+    </svg>`,
+
+    close: `<svg viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="1.7"
+      stroke-linecap="round" aria-hidden="true">
+      <path d="M5 5 19 19M19 5 5 19"/>
+    </svg>`,
+  };
+
+  // ------------------------------------------
+  // STYLING
+  // ------------------------------------------
+  const css = document.createElement("style");
+
+  css.textContent = `
+    .l-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      background: rgba(253, 250, 245, .97);
+      border-bottom: 1px solid #e4d9cc;
+      backdrop-filter: blur(14px);
+      font-family: "DM Sans", Arial, sans-serif;
+    }
+
+    .l-header-inner {
+      max-width: 1500px;
+      min-height: 72px;
+      margin: auto;
+      padding: 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .l-logo {
+      display: flex;
+      align-items: center;
+      color: #211e1b;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .l-logo img {
+      width: 135px;
+      max-height: 40px;
+      object-fit: contain;
+    }
+
+    .l-logo-fallback {
+      font-family: Georgia, serif;
+      font-size: 23px;
+      font-weight: bold;
+      letter-spacing: -.7px;
+    }
+
+    .l-middle {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .l-nav-link,
+    .l-menu-button {
+      background: transparent;
+      border: 0;
+      color: #2f2924;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 12px 6px;
+    }
+
+    .l-nav-link:hover,
+    .l-menu-button:hover {
+      color: #9c7651;
+    }
+
+    .l-menu-wrap {
+      position: relative;
+    }
+
+    .l-dropdown {
+      position: absolute;
+      top: calc(100% + 13px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 245px;
+      padding: 10px;
+      background: #fffdfa;
+      border: 1px solid #ded0c1;
+      border-radius: 12px;
+      box-shadow: 0 18px 45px rgba(39, 29, 20, .14);
+      z-index: 1100;
+    }
+
+    .l-dropdown[hidden],
+    .l-backdrop[hidden],
+    .l-drawer[hidden],
+    .l-account-view[hidden] {
+      display: none !important;
+    }
+
+    .l-dropdown button {
+      display: block;
+      width: 100%;
+      padding: 13px 14px;
+      text-align: left;
+      font: inherit;
+      font-size: 13px;
+      color: #302924;
+      background: transparent;
+      border: 0;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .l-dropdown button:hover {
+      background: #f5efe7;
+    }
+
+    .l-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .l-icon-button {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      padding: 9px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #302924;
+      cursor: pointer;
+    }
+
+    .l-icon-button:hover {
+      background: #f0e8df;
+    }
+
+    .l-icon-button svg {
+      width: 23px;
+      height: 23px;
+    }
+
+    .l-bag-count {
+      position: absolute;
+      right: 0;
+      top: 0;
+      min-width: 17px;
+      height: 17px;
+      padding: 0 3px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #a78260;
+      color: white;
+      font-size: 10px;
+    }
+
+    .l-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      background: rgba(29, 24, 20, .45);
+    }
+
+    .l-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1201;
+      width: min(620px, 100vw);
+      background: #fdfbf7;
+      box-shadow: -15px 0 55px rgba(0, 0, 0, .13);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: "DM Sans", Arial, sans-serif;
+    }
+
+    .l-drawer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid #e4d9cc;
+      background: #fdfbf7;
+      flex-shrink: 0;
+    }
+
+    .l-drawer-top h2 {
+      margin: 0;
+      color: #302924;
+      font: 400 25px "Playfair Display", Georgia, serif;
+    }
+
+    .l-drawer-content {
+      flex: 1;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 20px;
+    }
+
+    /* Move existing shelf into the drawer */
+    .l-drawer .bs-shelf {
+      width: 100%;
+      margin: 0;
+      padding: 10px;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .l-drawer .bs-grid {
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    }
+
+    .l-account-view {
+      padding: 25px 12px;
+      color: #342c25;
+      line-height: 1.7;
+    }
+
+    .l-account-view h3 {
+      font: 400 28px "Playfair Display", Georgia, serif;
+      margin: 0 0 15px;
+    }
+
+    .l-account-view p {
+      font-size: 14px;
+      color: #64584e;
+    }
+
+    .l-account-shelf {
+      background: #302924;
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 13px 20px;
+      margin-top: 15px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    body.l-drawer-open {
+      overflow: hidden;
+    }
+
+    .l-header button:focus-visible,
+    .l-header a:focus-visible,
+    .l-drawer button:focus-visible {
+      outline: 2px solid #9c7651;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 650px) {
+      .l-header-inner {
+        min-height: 60px;
+        padding: 0 10px;
+        gap: 7px;
+      }
+
+      .l-logo img {
+        width: 95px;
+      }
+
+      .l-logo-fallback {
+        font-size: 17px;
+      }
+
+      .l-middle {
+        gap: 0;
+      }
+
+      .l-nav-link {
+        display: none;
+      }
+
+      .l-menu-button {
+        font-size: 12px;
+        padding: 10px 2px;
+      }
+
+      .l-icon-button {
+        width: 34px;
+        height: 38px;
+        padding: 6px;
+      }
+
+      .l-icon-button svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .l-dropdown {
+        left: auto;
+        right: -80px;
+        transform: none;
+        width: min(270px, 90vw);
+      }
+
+      .l-drawer-content {
+        padding: 12px;
+      }
+
+      .l-drawer .bs-grid {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .l-drawer-top h2 {
+        font-size: 21px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .l-drawer .bs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  `;
+
+  document.head.appendChild(css);
+
+  // ------------------------------------------
+  // TOP NAVIGATION
+  // ------------------------------------------
+  const header = document.createElement("header");
+  header.className = "l-header";
+
+  header.innerHTML = `
+    <div class="l-header-inner">
+
+      <a href="#vanityScene"
+         class="l-logo"
+         id="lHome"
+         aria-label="L'Oréal Beauty Advisor home">
+
+        <img src="img/loreal-logo.png"
+             alt="L'Oréal Paris">
+
+        <span class="l-logo-fallback" hidden>
+          L'ORÉAL
+        </span>
+      </a>
+
+      <nav class="l-middle"
+           aria-label="Main navigation">
+
+        <button type="button"
+                class="l-nav-link"
+                data-open="home">
+          Beauty Advisor
+        </button>
+
+        <div class="l-menu-wrap">
+          <button type="button"
+                  id="lExplore"
+                  class="l-menu-button"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  aria-controls="lDropdown">
+            Explore &#8964;
+          </button>
+
+          <div id="lDropdown"
+               class="l-dropdown"
+               hidden>
+            <button data-open="home">
+              Beauty Advisor
+            </button>
+
+            <button data-open="all">
+              Build My Routine
+            </button>
+
+            <button data-open="Skincare">
+              Skincare
+            </button>
+
+            <button data-open="Haircare">
+              Haircare
+            </button>
+
+            <button data-open="Makeup">
+              Makeup
+            </button>
+
+            <button data-open="selected">
+              My Selected Products
+            </button>
+          </div>
+        </div>
+
+        <button type="button"
+                class="l-nav-link"
+                data-open="all">
+          My Routine
+        </button>
+      </nav>
+
+      <div class="l-actions">
+
+        <button type="button"
+                id="lSearch"
+                class="l-icon-button"
+                aria-label="Search products"
+                title="Search products">
+          ${icons.search}
+        </button>
+
+        <button type="button"
+                id="lAccount"
+                class="l-icon-button"
+                aria-label="My account"
+                title="My account">
+          ${icons.account}
+        </button>
+
+        <button type="button"
+                id="lBag"
+                class="l-icon-button"
+                aria-label="My selected products"
+                title="My selected products">
+          ${icons.bag}
+          <span class="l-bag-count"
+                id="lBagCount">0</span>
+        </button>
+
+      </div>
+    </div>
+  `;
+
+  document.body.prepend(header);
+
+  // Logo fallback if image is unavailable.
+  const logoImage = header.querySelector(".l-logo img");
+  const logoFallback = header.querySelector(".l-logo-fallback");
+
+  logoImage.addEventListener("error", () => {
+    logoImage.hidden = true;
+    logoFallback.hidden = false;
+  });
+
+  if (logoImage.complete && !logoImage.naturalWidth) {
+    logoImage.hidden = true;
+    logoFallback.hidden = false;
+  }
+
+  // ------------------------------------------
+  // SLIDE-OUT PANEL
+  // ------------------------------------------
+  const backdrop = document.createElement("div");
+  backdrop.className = "l-backdrop";
+  backdrop.hidden = true;
+
+  const drawer = document.createElement("aside");
+  drawer.className = "l-drawer";
+  drawer.hidden = true;
+  drawer.setAttribute("role", "dialog");
+  drawer.setAttribute("aria-modal", "true");
+  drawer.setAttribute("aria-labelledby", "lDrawerTitle");
+
+  drawer.innerHTML = `
+    <div class="l-drawer-top">
+      <h2 id="lDrawerTitle">My Beauty Shelf</h2>
+
+      <button type="button"
+              id="lClose"
+              class="l-icon-button"
+              aria-label="Close panel">
+        ${icons.close}
+      </button>
+    </div>
+
+    <div class="l-drawer-content"
+         id="lDrawerContent">
+
+      <div class="l-account-view"
+           id="lAccountView"
+           hidden>
+        <h3>My Account</h3>
+        <p>
+          Welcome to your personal beauty experience.
+        </p>
+        <p>
+          Account sign-in is not connected yet.
+          Your selected products are currently
+          saved in this browser.
+        </p>
+        <button type="button"
+                class="l-account-shelf"
+                id="lAccountShelf">
+          View My Beauty Shelf
+        </button>
+      </div>
+
+    </div>
+  `;
+
+  document.body.append(backdrop, drawer);
+
+  const drawerContent = drawer.querySelector("#lDrawerContent");
+
+  const accountView = drawer.querySelector("#lAccountView");
+
+  const drawerTitle = drawer.querySelector("#lDrawerTitle");
+
+  const explore = header.querySelector("#lExplore");
+
+  const dropdown = header.querySelector("#lDropdown");
+
+  const bagCount = header.querySelector("#lBagCount");
+
+  // Move the REAL existing product shelf.
+  // This preserves its buttons, search, saved
+  // selections and routine-generation logic.
+  drawerContent.appendChild(shelf);
+
+  // Hide account content by default.
+  accountView.hidden = true;
+
+  // ------------------------------------------
+  // OPEN AND CLOSE
+  // ------------------------------------------
+  let previousFocus = null;
+
+  function closeDropdown() {
+    dropdown.hidden = true;
+    explore.setAttribute("aria-expanded", "false");
+  }
+
+  function closeDrawer() {
+    drawer.hidden = true;
+    backdrop.hidden = true;
+    document.body.classList.remove("l-drawer-open");
+
+    if (previousFocus && previousFocus.isConnected) {
+      previousFocus.focus();
+    }
+  }
+
+  function openDrawer(mode = "all") {
+    previousFocus = document.activeElement;
+    closeDropdown();
+
+    backdrop.hidden = false;
+    drawer.hidden = false;
+    document.body.classList.add("l-drawer-open");
+
+    const isAccount = mode === "account";
+
+    shelf.hidden = isAccount;
+    accountView.hidden = !isAccount;
+
+    if (isAccount) {
+      drawerTitle.textContent = "My Account";
+    } else {
+      drawerTitle.textContent =
+        mode === "selected"
+          ? "My Selected Products"
+          : mode === "search"
+            ? "Search Products"
+            : mode === "all"
+              ? "Build My Routine"
+              : mode;
+    }
+
+    const scrollArea = drawer.querySelector(".l-drawer-content");
+
+    scrollArea.scrollTop = 0;
+
+    // Use existing category filters.
+    if (
+      mode === "all" ||
+      mode === "Skincare" ||
+      mode === "Haircare" ||
+      mode === "Makeup"
+    ) {
+      const category = mode === "all" ? "All" : mode;
+
+      const button = [...shelf.querySelectorAll(".bs-filter")].find(
+        (b) => b.dataset.category === category,
+      );
+
+      if (button) button.click();
+    }
+
+    if (mode === "search") {
+      const input = shelf.querySelector("#bsSearch");
+      requestAnimationFrame(() => input?.focus());
+    }
+
+    if (mode === "selected") {
+      requestAnimationFrame(() => {
+        shelf.querySelector(".bs-selected-area")?.scrollIntoView({
+          block: "start",
+          behavior: "smooth",
+        });
+      });
+    }
+
+    requestAnimationFrame(() => {
+      drawer.querySelector("#lClose")?.focus({
+        preventScroll: true,
+      });
+      if (mode === "search") {
+        shelf.querySelector("#bsSearch")?.focus();
+      }
+    });
+  }
+
+  function goHome() {
+    closeDrawer();
+    closeDropdown();
+
+    document.getElementById("vanityScene")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+
+  // ------------------------------------------
+  // NAVIGATION EVENTS
+  // ------------------------------------------
+  explore.addEventListener("click", () => {
+    dropdown.hidden = !dropdown.hidden;
+
+    explore.setAttribute("aria-expanded", String(!dropdown.hidden));
+  });
+
+  header.querySelectorAll("[data-open]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = button.dataset.open;
+
+      if (mode === "home") {
+        goHome();
+      } else {
+        openDrawer(mode);
+      }
+    });
+  });
+
+  header.querySelector("#lHome").addEventListener("click", (event) => {
+    event.preventDefault();
+    goHome();
+  });
+
+  header.querySelector("#lSearch").addEventListener("click", () => {
+    openDrawer("search");
+  });
+
+  header.querySelector("#lAccount").addEventListener("click", () => {
+    openDrawer("account");
+  });
+
+  header.querySelector("#lBag").addEventListener("click", () => {
+    openDrawer("selected");
+  });
+
+  drawer.querySelector("#lClose").addEventListener("click", closeDrawer);
+
+  backdrop.addEventListener("click", closeDrawer);
+
+  drawer.querySelector("#lAccountShelf").addEventListener("click", () => {
+    openDrawer("all");
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!event.target.closest(".l-menu-wrap")) {
+      closeDropdown();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      if (!drawer.hidden) {
+        closeDrawer();
+      } else {
+        closeDropdown();
+      }
+    }
+
+    // Keep keyboard focus inside the open panel.
+    if (event.key === "Tab" && !drawer.hidden) {
+      const focusable = [
+        ...drawer.querySelectorAll(
+          "button:not([disabled]), a[href], input:not([disabled]), summary",
+        ),
+      ].filter(
+        (el) => !el.closest("[hidden]") && el.getClientRects().length > 0,
+      );
+
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  // ------------------------------------------
+  // UPDATE SHOPPING BAG COUNT
+  // ------------------------------------------
+  const originalCount = shelf.querySelector("#bsCount");
+
+  function updateBagCount() {
+    if (!originalCount) return;
+
+    const number = originalCount.textContent.match(/\d+/)?.[0] || "0";
+
+    bagCount.textContent = number;
+  }
+
+  if (originalCount) {
+    new MutationObserver(updateBagCount).observe(originalCount, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  }
+
+  updateBagCount();
+
+  // After generating a routine, close the panel.
+  // Existing code still sends the request to OpenAI.
+  const generateButton = shelf.querySelector("#bsGenerate");
+
+  if (generateButton) {
+    generateButton.addEventListener("click", () => {
+      if (!generateButton.disabled && !isSending) {
+        closeDrawer();
+      }
+    });
+  }
+
+  console.log("L'Oréal navigation loaded.");
 })();
